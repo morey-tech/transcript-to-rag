@@ -1,0 +1,31 @@
+schemaVersion: 2.3.0
+metadata:
+  generateName: morey-tech-transcript-to-rag
+  version: 0.1.0
+components:
+  - name: devcontainer
+    container:
+      image: ghcr.io/morey-tech/homelab/devspace-base:sha-dad4013
+      memoryRequest: 2Gi
+      memoryLimit: 4Gi
+      cpuRequest: 100m
+      mountSources: true
+      sourceMapping: /projects
+commands:
+  # - id: post-create-setup
+  #   exec:
+  #     component: devcontainer
+  #     workingDir: ${PROJECT_SOURCE}
+  #     commandLine: /projects/homelab/.devcontainer/postCreate.sh
+  - id: generate-roo-settings
+    exec:
+      component: devcontainer
+      commandLine: |
+        if [ -f /etc/roo-code/generate-settings.sh ]; then
+          bash /etc/roo-code/generate-settings.sh
+        fi
+      workingDir: ${PROJECT_SOURCE}
+events:
+  postStart:
+    # - post-create-setup
+    - generate-roo-settings
